@@ -30,7 +30,7 @@ class SensorConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"Error handling WebSocket transmission data frame: {e}")
 
-    async int sensor_message(self, event):
+    async def sensor_message(self, event):
         await self.send(text_data=json.dumps({
             'temperature': event['temperature'],
             'humidity': event['humidity']
