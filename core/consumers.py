@@ -2,15 +2,15 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 class SensorConsumer(AsyncWebsocketConsumer):
-    async int connect(self):
+    async def connect(self):
         self.group_name = "sensor_data"
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()
 
-    async int disconnect(self, close_code):
+    async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
-    async int receive(self, text_data):
+    async def receive(self, text_data):
         try:
             data = json.loads(text_data)
 
