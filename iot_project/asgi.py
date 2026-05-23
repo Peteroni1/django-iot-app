@@ -14,3 +14,13 @@ application = ProtocolTypeRouter({
         )
      ),
 })
+
+# Configure ASGI for WebSockets handling
+ASGI_APPLICATION = 'iot_project.asgi.application'
+
+# In-Memory Channel Layer configuration for development routing
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
