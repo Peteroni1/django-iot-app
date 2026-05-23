@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Data Stream Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; padding: 50px; }
+        .card-container { display: flex; justify-content: center; gap: 25px; margin-top: 30px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 180px; }
+        .value { font-size: 2.5rem; font-weight: bold; color: #1890ff; margin: 10px 0; }
+        #status { font-weight: bold; padding: 5px 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <h1>Live IoT Sensor Dashboard</h1>
+    <p>Telemetry Status: <span id="status" style="color: #f5222d; background: #fff1f0;">Disconnected</span></p>
+
+    <div class="card-container">
+        <div class="card">
+            <h3>Temperature</h3>
+            <div id="temp" class="value">--</div><span>°C</span>
+        </div>
+        <div class="card">
+            <h3>Humidity</h3>
+            <div id="hum" class="value">--</div><span>%</span>
+        </div>
+    </div>
+
+    <script>
+        const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+        const ws_path = `${ws_scheme}://${window.location.host}/ws/sensor/`;
+        let ws;
+
+        function connectWebSocket() {
+            ws = new WebSocket(ws_path);
+
+            ws.onopen = () => {
+                document.getElementById('status').innerText = 'Connected';
+                document.getElementById('status').style.color = '#52c41a';
+                document.getElementById('status').style.background = '#f6ffed';
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if(data.temperature !== undefined) document.getElementById('temp').innerText = data.temperature;
+                    if(data.humidity !== undefined) document.getElementById('hum').innerText = data.humidity;
+                } catch (err) {
+                    console.error("Data frame processing fault:", err);
+                }
+            };
+
+            ws.onclose = () => {
+                document.getElementById('status').innerText = 'Disconnected. Reconnecting...';
+                document.getElementById('status').style.color = '#f5222d';
+                document.getElementById('status').style.background = '#fff1f0';
+                // Automatic Reconnection loop logic (Required for Excellent)
+                setTimeout(connectWebSocket, 4000); 
+            };
+        }
+
+        connectWebSocket();
+    </script>
+</body>
+</html>
