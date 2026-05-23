@@ -6,6 +6,6 @@ A full-stack web application featuring real-time data streaming via Django Chann
 
 Contributers of this PIT: 
 
-Lerasan, Eugene Karl P.
-Manzano, Peter P.
-Batoon, Ashely Zamora
+"Lerasan, Eugene Karl P."
+"Manzano, Peter P."
+"Batoon, Ashely Zamora"
